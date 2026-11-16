@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>The After Hours Edit — AR Invitation</title>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <style>
+    :root{--red:#e90000;--ivory:#edece8;--ink:#1a1a1a}
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--ink);font-family:Arial,Helvetica,sans-serif;color:var(--ivory)}
+    #intro{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:space-between;padding:30px 24px;background:var(--ink)}
+    .eyebrow{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#aaa}
+    .hero{margin:auto 0}.hero small{display:block;font-size:11px;letter-spacing:.25em;color:var(--red);margin-bottom:16px}.hero h1{font-size:clamp(42px,12vw,76px);line-height:.88;letter-spacing:-.07em;margin:0;text-transform:uppercase}.hero p{max-width:270px;color:#bcbab5;font-size:13px;line-height:1.6;margin-top:22px}
+    button{border:0;background:var(--red);color:white;padding:16px 20px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:11px;cursor:pointer;width:100%;border-radius:0}
+    #hint{position:fixed;z-index:4;left:16px;right:16px;bottom:18px;text-align:center;background:rgba(26,26,26,.82);padding:12px;font-size:11px;letter-spacing:.08em;display:none}
+    #status{position:fixed;top:18px;left:0;right:0;z-index:4;text-align:center;font-size:10px;letter-spacing:.18em;text-transform:uppercase;pointer-events:none;text-shadow:0 1px 4px #000}
+    #exit{position:fixed;z-index:6;right:14px;top:14px;width:auto;padding:11px 14px;background:rgba(26,26,26,.8);display:none}
+    #rsvp{position:fixed;z-index:6;left:16px;right:16px;bottom:18px;width:calc(100% - 32px);display:none}
+    a-scene{position:fixed;inset:0}
+  </style>
+</head>
+<body>
+  <section id="intro">
+    <div class="eyebrow">An invitation in augmented reality · 001</div>
+    <div class="hero">
+      <small>YOU'RE ON THE LIST</small>
+      <h1>The<br>After<br>Hours<br>Edit.</h1>
+      <p>A little something beyond the screen. Scan the printed invitation, then bring it to life.</p>
+    </div>
+    <button id="start">Activate AR</button>
+    <div class="eyebrow">Point your camera at the invitation artwork</div>
+  </section>
+  <div id="status"></div>
+  <div id="hint">Move your camera over the invitation to reveal the envelope.</div>
+  <button id="exit">Exit AR</button>
+  <button id="rsvp">RSVP · DEMO</button>
+
+  <a-scene id="ar-scene" mindar-image="imageTargetSrc: ./targets.mind; autoStart: false; uiLoading: no; uiScanning: no; uiError: no; maxTrack: 1" embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" style="display:none">
+    <a-assets>
+      <a-mixin id="soft-shadow" material="shader: standard; roughness: 1; metalness: 0"></a-mixin>
+    </a-assets>
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-entity mindar-image-target="targetIndex: 0" id="target">
+      <!-- Invitation envelope -->
+      <a-entity id="invite" position="0 0 0.05" scale="0.001 0.001 0.001">
+        <a-plane width="1.05" height="0.72" position="0 0 0" material="color: #1a1a1a; roughness: 1"></a-plane>
+        <a-plane width="1.00" height="0.67" position="0 0 0.012" material="color: #e90000; roughness: 1"></a-plane>
+        <!-- Envelope folds -->
+        <a-entity geometry="primitive: triangle; vertexA: -0.49 0.32 0; vertexB: 0.49 0.32 0; vertexC: 0 -0.28 0" position="0 0 -0.001" material="color: #c90000; side: double"></a-entity>
+        <a-entity geometry="primitive: triangle; vertexA: -0.49 -0.32 0; vertexB: 0 -0.02 0; vertexC: -0.49 0.32 0" position="0 0 0.025" material="color: #f21a1a; side: double"></a-entity>
+        <a-entity geometry="primitive: triangle; vertexA: 0 -0.02 0; vertexB: 0.49 -0.32 0; vertexC: 0.49 0.32 0" position="0 0 0.025" material="color: #d90000; side: double"></a-entity>
+        <!-- Card rises from the envelope -->
+        <a-entity id="card" position="0 -0.02 0.06">
+          <a-plane width="0.78" height="0.96" material="color: #edece8; roughness: 1" position="0 0 0"></a-plane>
+          <a-text value="YOU ARE INVITED" color="#e90000" align="center" width="1.55" position="0 0.32 0.012" letter-spacing="2"></a-text>
+          <a-text value="THE AFTER HOURS\nEDIT" color="#1a1a1a" align="center" width="2.1" position="0 0.08 0.012" line-height="48"></a-text>
+          <a-plane width="0.48" height="0.006" color="#e90000" position="0 -0.12 0.014"></a-plane>
+          <a-text value="A NIGHT OF STYLE, MUSIC &\nGOOD COMPANY" color="#1a1a1a" align="center" width="1.35" position="0 -0.25 0.012" line-height="42"></a-text>
+          <a-text value="FRIDAY · 27 NOVEMBER 2026\n7:00 PM ONWARDS\nTHE ROOFTOP, HYDERABAD" color="#1a1a1a" align="center" width="1.35" position="0 -0.43 0.012" line-height="38"></a-text>
+        </a-entity>
+        <!-- Opening flap -->
+        <a-entity id="flap" position="0 0.335 0.055">
+          <a-plane width="1.00" height="0.67" rotation="0 0 0" material="color: #b90000; side: double; roughness: 1" position="0 -0.335 0"></a-plane>
+          <a-text value="OPEN ME" color="#edece8" align="center" width="1.1" position="0 -0.30 0.012"></a-text>
+        </a-entity>
+        <a-text value="✦" color="#edece8" align="center" width="1.0" position="0 0.01 0.08"></a-text>
+      </a-entity>
+    </a-entity>
+  </a-scene>
+
+  <script>
+    const startBtn = document.getElementById('start');
+    const intro = document.getElementById('intro');
+    const sceneEl = document.getElementById('ar-scene');
+    const statusEl = document.getElementById('status');
+    const hintEl = document.getElementById('hint');
+    const exitBtn = document.getElementById('exit');
+    const rsvpBtn = document.getElementById('rsvp');
+    const target = document.getElementById('target');
+    const invite = document.getElementById('invite');
+    const card = document.getElementById('card');
+    const flap = document.getElementById('flap');
+    let opened = false;
+
+    function resetInvite(){
+      opened = false;
+      invite.setAttribute('animation__show', 'property: scale; to: 1 1 1; dur: 450; easing: easeOutBack');
+      card.setAttribute('animation__rise', 'property: position; from: 0 -0.02 0.06; to: 0 0.46 0.10; dur: 900; delay: 450; easing: easeOutBack');
+      flap.setAttribute('animation__open', 'property: rotation; to: -165 0 0; dur: 650; easing: easeInOutSine');
+      setTimeout(() => { opened = true; }, 1200);
+    }
+    target.addEventListener('targetFound', () => {
+      statusEl.textContent = 'INVITATION FOUND';
+      hintEl.style.display = 'none';
+      rsvpBtn.style.display = 'block';
+      invite.setAttribute('scale', '0.001 0.001 0.001');
+      card.setAttribute('position', '0 -0.02 0.06');
+      flap.setAttribute('rotation', '0 0 0');
+      resetInvite();
+    });
+    target.addEventListener('targetLost', () => {
+      statusEl.textContent = 'FIND THE INVITATION';
+      rsvpBtn.style.display = 'none';
+      invite.setAttribute('scale', '0.001 0.001 0.001');
+    });
+    startBtn.addEventListener('click', async () => {
+      intro.style.display = 'none';
+      sceneEl.style.display = 'block';
+      hintEl.style.display = 'block';
+      statusEl.textContent = 'ALLOW CAMERA ACCESS · SCAN THE INVITATION';
+      exitBtn.style.display = 'block';
+      try { await sceneEl.systems['mindar-image-system'].start(); }
+      catch (e) { statusEl.textContent = 'CAMERA ERROR — OPEN THIS PAGE IN SAFARI/CHROME AND ALLOW CAMERA'; console.error(e); }
+    });
+    rsvpBtn.addEventListener('click', () => { alert('Demo RSVP button. Replace this with your actual RSVP link or contact before submission.'); });
+    exitBtn.addEventListener('click', () => {
+      sceneEl.systems['mindar-image-system'].stop();
+      sceneEl.style.display = 'none'; intro.style.display = 'flex';
+      statusEl.textContent = ''; hintEl.style.display = 'none'; exitBtn.style.display = 'none'; rsvpBtn.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
